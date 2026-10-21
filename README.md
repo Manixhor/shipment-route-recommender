@@ -2,6 +2,8 @@
 
 A small, explainable route decision system for the Aiqon take-home assignment. It ranks candidate routes by cost, transit time, and delay risk; supports shipment-specific weights and limits; and explains the recommendation against the next-best option.
 
+**Live demo:** [Shipment Route Planner](https://developer0880.pythonanywhere.com/)
+
 ## Quick start
 
 Requires Python 3.10+ and uses only the standard library.
@@ -18,7 +20,7 @@ Use `python3 main.py --help` for the available commands. The `data/routes.csv` f
 
 ## Optional browser UI
 
-The assignment does not require a UI, so the CLI remains the simplest path and has no additional dependencies. To use the optional local interface:
+The assignment does not require a UI, so the CLI remains the simplest path and has no additional dependencies. You can try the [hosted demo](https://developer0880.pythonanywhere.com/) or run the interface locally:
 
 ```bash
 python3 ui.py
