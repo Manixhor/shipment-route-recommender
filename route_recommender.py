@@ -88,7 +88,7 @@ def rank_routes(routes: Iterable[Route], weights: dict[str, float], constraints:
         return out
     feasible = [r for r in candidates if not violations(r)]
     if not feasible:
-        return {"status": "infeasible", "recommendation": None, "ranked": [], "message": "No route satisfies all supplied constraints.", "excluded": [{"route_id": r.route_id, "violations": violations(r)} for r in candidates]}
+        return {"status": "infeasible", "recommendation": None, "ranked": [], "message": "None of the routes meet all of your limits.", "excluded": [{"route_id": r.route_id, "violations": violations(r)} for r in candidates]}
     components = {
         "cost": _normalized([r.cost_usd for r in feasible]),
         "time": _normalized([r.transit_days for r in feasible]),
@@ -109,15 +109,20 @@ def explain(result: dict) -> str:
         return result["message"]
     best, runner = result["recommendation"], result["runner_up"]
     r = best["route"]
-    text = (f"Recommend {r.route_id} via {r.hubs}: ${r.cost_usd:,.0f}, {r.transit_days:.0f} days, "
-            f"{r.delay_probability:.0%} estimated delay probability. Its weighted score is {best['score']:.1f}/100 (lower is better).")
+    text = (f"I'd choose {r.route_id} via {r.hubs}. It costs ${r.cost_usd:,.0f}, takes about "
+            f"{r.transit_days:.0f} days, and has an estimated {r.delay_probability:.0%} chance of delay.")
     if runner:
         q = runner["route"]
-        text += (f" Compared with {q.route_id}, it is ${abs(q.cost_usd-r.cost_usd):,.0f} "
-                 f"{'cheaper' if r.cost_usd < q.cost_usd else 'more expensive' if r.cost_usd > q.cost_usd else 'the same cost'}, "
-                 f"{abs(q.transit_days-r.transit_days):.0f} days {'faster' if r.transit_days < q.transit_days else 'slower' if r.transit_days > q.transit_days else 'the same speed'}, "
-                 f"and its estimated delay probability is {abs(q.delay_probability-r.delay_probability)*100:.1f} percentage points "
-                 f"{'lower' if r.delay_probability < q.delay_probability else 'higher' if r.delay_probability > q.delay_probability else 'the same'}.")
+        cost_change = (f"${abs(q.cost_usd-r.cost_usd):,.0f} less" if r.cost_usd < q.cost_usd else
+                       f"${abs(q.cost_usd-r.cost_usd):,.0f} more" if r.cost_usd > q.cost_usd else "the same amount")
+        time_change = (f"{abs(q.transit_days-r.transit_days):.0f} days sooner" if r.transit_days < q.transit_days else
+                       f"{abs(q.transit_days-r.transit_days):.0f} days later" if r.transit_days > q.transit_days else "about the same time")
+        risk_change = (f"{abs(q.delay_probability-r.delay_probability)*100:.1f} percentage points lower" if r.delay_probability < q.delay_probability else
+                       f"{abs(q.delay_probability-r.delay_probability)*100:.1f} percentage points higher" if r.delay_probability > q.delay_probability else "about the same")
+        text += (f" Compared with {q.route_id}, it costs {cost_change}, arrives {time_change}, "
+                 f"and its estimated delay chance is {risk_change}.")
+    else:
+        text = f"This is the only route that meets your limits: {r.route_id} via {r.hubs}. {text.split('. ', 1)[1]}"
     return text
 
 
