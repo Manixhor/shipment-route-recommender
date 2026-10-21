@@ -35,7 +35,7 @@ h2{font-size:17px;margin:0 0 12px}.field{margin:12px 0}.field label{display:bloc
 <div class="field"><label for="maxRisk">Maximum chance of delay (%)</label><input id="maxRisk" type="number" min="0" max="100" placeholder="No limit"></div>
 <button class="button" id="go">Show me the best options</button><p class="hint">Routes that break a limit are left out. If none fit, we will tell you.</p></section>
 <section class="card" id="results"><div class="empty">Select a shipment and compare its available routes.</div></section></div>
-<p class="foot">This demo uses fictional shipments and estimates, not live shipping data. Scores compare options for the selected shipment; they are not promises about actual delivery.</p></main>
+</main>
 <script>
 const $=id=>document.getElementById(id);let profiles={};
 function showWeight(id){$(id+'Value').textContent=$(id).value}
