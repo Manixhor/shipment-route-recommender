@@ -98,4 +98,4 @@ Min-max scaling is sensitive to outliers and changes when candidate routes are a
 - Route cost, days, and delay probability are comparable within a shipment.
 - `risk_index` is an illustrative 0–100 indicator included for context; the baseline ranking uses delay probability as the reliability/risk measure to avoid counting correlated signals twice.
 - This tool recommends among supplied alternatives; it does not generate routes.
-# shipment-route-recommender
+
